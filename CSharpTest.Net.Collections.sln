@@ -8,6 +8,9 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CSharpTest.Net.Collections", "src\CSharpTest.Net.Collections\CSharpTest.Net.Collections.csproj", "{2594F622-1DEE-4572-B789-D160AE3CF30C}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{3FA6DC9B-789A-49F3-A7D6-650207A61F9C}"
+	ProjectSection(SolutionItems) = preProject
+		tests\Directory.Build.props = tests\Directory.Build.props
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CSharpTest.Net.BPlusTree.Test", "tests\CSharpTest.Net.BPlusTreeTest\CSharpTest.Net.BPlusTree.Test.csproj", "{AB24511F-C758-48A9-A9D9-A90921253B6B}"
 EndProject
