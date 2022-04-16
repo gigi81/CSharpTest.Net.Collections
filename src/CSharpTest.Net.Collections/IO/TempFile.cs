@@ -34,6 +34,7 @@ namespace CSharpTest.Net.IO
         {
             return new TempFile(existingPath);
 		}
+
 		/// <summary>
 		/// Creates a temp file having the provided extension
 		/// </summary>
@@ -145,8 +146,10 @@ namespace CSharpTest.Net.IO
                     _filename = Path.GetFullPath(_filename);
             }
         }
+
         /// <summary> Disposes of the temporary file </summary>
-        public void Dispose() { Dispose(true); }
+        public void Dispose() => Dispose(true);
+
         /// <summary>
         /// Disposes of the temporary file
         /// </summary>
@@ -162,7 +165,7 @@ namespace CSharpTest.Net.IO
                 if (disposing)
                     GC.SuppressFinalize(this);
             }
-            catch (System.IO.IOException e)
+            catch (IOException e)
             {
                 string filename = _filename;
 

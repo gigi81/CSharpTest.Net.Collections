@@ -415,15 +415,12 @@ namespace CSharpTest.Net.Library.Test
                 //Corrupts the primary storage:
                 using (Stream f = temp.Open())
                     f.Write(sample, 0, 100);
-                try
+
+                Assert.Throws<InvalidDataException>(() =>
                 {
                     options.LoadingRule = TransactedCompoundFile.LoadingRule.Primary;
                     new TransactedCompoundFile(options).Dispose();
-                    Assert.Fail("Should not load");
-                }
-                catch (InvalidDataException)
-                {
-                }
+                });
 
                 options.LoadingRule = TransactedCompoundFile.LoadingRule.Secondary;
                 using (TransactedCompoundFile file = new TransactedCompoundFile(options))

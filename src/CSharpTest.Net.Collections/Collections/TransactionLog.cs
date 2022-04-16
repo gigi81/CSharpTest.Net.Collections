@@ -140,6 +140,7 @@ namespace CSharpTest.Net.Collections
     public class TransactionLog<TKey, TValue> : ITransactionLog<TKey, TValue>
     {
         private const int StateOpen = 1, StateCommitted = 2, StateRolledback = 3;
+
         #region Private Types
         enum OperationCode { Add = 1, Update = 2, Remove = 3 }
 
@@ -152,9 +153,10 @@ namespace CSharpTest.Net.Collections
             public TKey Key;
             public TValue Value;
 
-            public static IEnumerable<LogEntry> FromKeyValuePairs(IEnumerable<KeyValuePair<TKey, TValue>> e)
+            public static IEnumerable<LogEntry> FromKeyValuePairs(IEnumerable<KeyValuePair<TKey, TValue>> pairs)
             {
-                foreach (KeyValuePair<TKey, TValue> kv in e)
+                foreach (var kv in pairs)
+                {
                     yield return new LogEntry
                     {
                         TransactionId = 0,
@@ -162,6 +164,7 @@ namespace CSharpTest.Net.Collections
                         Key = kv.Key,
                         Value = kv.Value,
                     };
+                }
             }
         }
 

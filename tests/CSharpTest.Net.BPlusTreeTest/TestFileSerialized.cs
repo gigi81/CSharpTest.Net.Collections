@@ -84,17 +84,14 @@ namespace CSharpTest.Net.BPlusTree.Test
             options.CreateFile = CreatePolicy.Never;
 
             //Now that we've corrupted part of the file content, let's take a peek
-            try
+            Assert.Throws<InvalidDataException>(() =>
             {
-                using (BPlusTree<int, string> tree = new BPlusTree<int, string>(options))
+                using (var tree = new BPlusTree<int, string>(options))
                 {
-                    foreach (KeyValuePair<int, string> kv in tree)
+                    foreach (var kv in tree)
                         Assert.AreEqual(kv.Key.ToString(), kv.Value);
                 }
-                Assert.Fail("Expected InvalidDataException");
-            }
-            catch (InvalidDataException)
-            { }
+            });
 
             Dictionary<int, string> found = new Dictionary<int, string>();
             List<int> duplicates = new List<int>();
@@ -118,16 +115,14 @@ namespace CSharpTest.Net.BPlusTree.Test
         [Test]
         public void TestDeleteUnderlyingFile()
         {
-            try
+            Assert.Throws<IOException>(() =>
             {
-                using (BPlusTree<int, string> tree = new BPlusTree<int, string>(Options))
+                using (var tree = new BPlusTree<int, string>(Options))
                 {
                     Assert.IsTrue(tree.TryAdd(1, "hi"));
                     TempFile.Delete();
                 }
-                Assert.Fail();
-            }
-            catch(IOException) { }
+            });
         }
 
         [Test]
@@ -151,6 +146,7 @@ namespace CSharpTest.Net.BPlusTree.Test
             TempFile.Delete();
         }
     }
+
     [TestFixture]
     public class TestFileSerialized : TestDictionary<BPlusTree<int, string>, TestSimpleDictionary.BTreeFactory, int, string>
     {
@@ -178,16 +174,16 @@ namespace CSharpTest.Net.BPlusTree.Test
 
         protected override KeyValuePair<int, string>[] GetSample()
         {
-            return new[] 
-                       {
-                           new KeyValuePair<int,string>(1, "1"),
-                           new KeyValuePair<int,string>(3, "3"),
-                           new KeyValuePair<int,string>(5, "5"),
-                           new KeyValuePair<int,string>(7, "7"),
-                           new KeyValuePair<int,string>(9, "9"),
-                           new KeyValuePair<int,string>(11, "11"),
-                           new KeyValuePair<int,string>(13, "13"),
-                       };
+            return new[]
+            {
+                new KeyValuePair<int,string>(1, "1"),
+                new KeyValuePair<int,string>(3, "3"),
+                new KeyValuePair<int,string>(5, "5"),
+                new KeyValuePair<int,string>(7, "7"),
+                new KeyValuePair<int,string>(9, "9"),
+                new KeyValuePair<int,string>(11, "11"),
+                new KeyValuePair<int,string>(13, "13"),
+            };
         }
     }
 }

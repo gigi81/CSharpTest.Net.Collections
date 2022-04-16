@@ -207,7 +207,6 @@ namespace CSharpTest.Net.Library.Test
             Assert.Throws<NotSupportedException>(() => {
                 IList<int> tmp = new BTreeList<int>();
                 tmp.Insert(0, 0);
-                Assert.Fail("Should throw NotSupportedException");
             });
         }
 
@@ -218,7 +217,6 @@ namespace CSharpTest.Net.Library.Test
                 IList<int> tmp = new BTreeList<int>();
                 tmp.Add(0);
                 tmp[0] = 1;
-                Assert.Fail("Should throw NotSupportedException");
             });
         }
 

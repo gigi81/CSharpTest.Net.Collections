@@ -31,9 +31,9 @@ namespace CSharpTest.Net.BPlusTree.Test
             return new TransactionLogOptions<int, string>(file.TempPath,
                                                           PrimitiveSerializer.Int32,
                                                           PrimitiveSerializer.String)
-                                                          {
-                                                              FileOptions = FileOptions.WriteThrough,
-                                                          };
+            {
+                FileOptions = FileOptions.WriteThrough
+            };
         }
         [Test]
         public void TestTransactionLogOptions()
@@ -443,8 +443,9 @@ namespace CSharpTest.Net.BPlusTree.Test
                         {
                             var test = new Dictionary<int, string>();
                             log.ReplayLog(test);
-                            Assert.AreEqual(0, test.Count);
+                            Assert.AreEqual(0, test.Count, $"Failed corruption test {corruptionIx}");
                         }
+
                         Assert.IsFalse(File.Exists(tmp.TempPath));
                     }
                 }

@@ -65,11 +65,8 @@ namespace CSharpTest.Net.BPlusTree.Test
                     Assert.AreEqual(tree[3], 4);
                     Assert.AreEqual(tree[5], 6);
 
-                    try { tree[1] = 0; Assert.Fail(); }
-                    catch (InvalidOperationException) { }
-
-                    try { tree.Remove(1); Assert.Fail(); }
-                    catch (InvalidOperationException) { }
+                    Assert.Throws<InvalidOperationException>(() => tree[1] = 0);
+                    Assert.Throws<InvalidOperationException>(() => tree.Remove(1));
                 }
             }
         }

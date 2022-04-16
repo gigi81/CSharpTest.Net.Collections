@@ -408,10 +408,8 @@ namespace CSharpTest.Net.BPlusTree.Test
                 Assert.IsFalse(data.TryGetLast(out kv));
                 Assert.IsFalse(data.TryGetFirst(out kv));
 
-                try { data.First(); Assert.Fail("Should raise InvalidOperationException"); }
-                catch (InvalidOperationException) { }
-                try { data.Last(); Assert.Fail("Should raise InvalidOperationException"); }
-                catch (InvalidOperationException) { }
+                Assert.Throws<InvalidOperationException>(() => data.First());
+                Assert.Throws<InvalidOperationException>(() => data.Last());
             }
         }
 
