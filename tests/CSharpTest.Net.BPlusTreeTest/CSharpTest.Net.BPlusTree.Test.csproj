@@ -2,27 +2,12 @@
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
     <OutputType>Library</OutputType>
-    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <OutputPath>bin\</OutputPath>
-    <ErrorReport>none</ErrorReport>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugSymbols>True</DebugSymbols>
-    <OutputPath>bin\</OutputPath>
-    <ErrorReport>none</ErrorReport>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <IsPackable>false</IsPackable>
+    <IsTestable>true</IsTestable>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Update="System.Data">
-      <Private>False</Private>
-      <SpecificVersion>False</SpecificVersion>
-    </Reference>
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\CSharpTest.Net.Collections\CSharpTest.Net.Collections.csproj" />
+    <ProjectReference Include="..\..\src\CSharpTest.Net.Collections\CSharpTest.Net.Collections.csproj" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.11.0" />

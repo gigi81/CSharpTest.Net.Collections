@@ -35,6 +35,7 @@ namespace CSharpTest.Net.BPlusTree.Test
         public long CreateOrder;
         public long ReadCount;
         public long UpdateCount;
+        [MarshalAs(UnmanagedType.ByValArray)]
         public byte[] RandomBytes;
 
         public static IEnumerable<KeyValuePair<Guid, TestInfo>> Create(int count)
