@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <RootNamespace>CSharpTest.Net</RootNamespace>
-    <TargetFramework>netstandard2.1</TargetFramework>
+    <TargetFrameworks>net46;netstandard2.1;net6.0</TargetFrameworks>
     <Company>Roger Knapp</Company>
     <Product>http://CSharpTest.Net/Projects</Product>
     <Description>Fully managed B+ Tree implementation for local data storage.</Description>
@@ -14,6 +14,7 @@
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
 	<PackageId>CSharpTest.Net.Collections.netstandard21</PackageId>
 	<PackageProjectUrl>https://github.com/josellm/CSharpTest.Net.Collections</PackageProjectUrl>
+	<LangVersion>10</LangVersion>
   </PropertyGroup>
   <ItemGroup>
     <Compile Update="Resources.Designer.cs">

@@ -242,7 +242,7 @@ namespace CSharpTest.Net.Library.Test
 
         public static int GuidToInt(Guid guid) {
             var bytes = guid.ToByteArray();
-            var a = BitConverter.ToInt32(bytes);
+            var a = BitConverter.ToInt32(bytes, 0);
             var b = BitConverter.ToInt16(bytes, 4);
             var c = BitConverter.ToInt16(bytes, 6);
             return a ^ ((b << 16) | (ushort)c) ^ ((bytes[10] << 24) | bytes[15]);

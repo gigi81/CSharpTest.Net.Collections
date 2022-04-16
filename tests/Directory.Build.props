@@ -6,6 +6,7 @@
       https://github.com/Tyrrrz/GitHubActionsTestLogger/issues/5 
     -->
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+	<LangVersion>10</LangVersion>
   </PropertyGroup>
 
   <ItemGroup>
