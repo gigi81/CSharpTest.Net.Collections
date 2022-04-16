@@ -1,0 +1,19 @@
+<Project>
+  <PropertyGroup>
+    <IsPackable>false</IsPackable>
+    <!--  
+      Ensure that test logger is copied to output directory, see 
+      https://github.com/Tyrrrz/GitHubActionsTestLogger/issues/5 
+    -->
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="NUnit" Version="3.13.2" />
+    <PackageReference Include="NUnit3TestAdapter" Version="4.0.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.7.1" />
+    <PackageReference Include="coverlet.collector" Version="1.3.0" />
+    <PackageReference Include="GitHubActionsTestLogger" Version="1.1.2" />
+    <PackageReference Include="Snapshooter.NUnit" Version="0.5.8" />
+  </ItemGroup>
+</Project>

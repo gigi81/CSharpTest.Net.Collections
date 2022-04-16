@@ -31,6 +31,7 @@ namespace CSharpTest.Net.Library.Test.LockingTests
                 Assert.IsFalse(Monitor.TryEnter(obj, 0));
             l.Dispose();
         }
+
         [Test]
         public void ReadToWriteFails()
         {
@@ -38,11 +39,11 @@ namespace CSharpTest.Net.Library.Test.LockingTests
             using (l.Read())
                 Assert.IsFalse(l.TryWrite(10));
         }
+
         [Test]
-        [Ignore("Dispose not work in .net 6.0")]
         public void DisposedWithReaders()
         {
-            Assert.Throws<InvalidOperationException>(() => {
+            Assert.Throws<AggregateException>(() => {
                 ILockStrategy l = LockFactory.Create();
                 ThreadedReader thread = new ThreadedReader(l);
                 try {
@@ -52,11 +53,11 @@ namespace CSharpTest.Net.Library.Test.LockingTests
                 }
             });
         }
+
         [Test]
-        [Ignore("Dispose not work in .net 6.0")]
         public void DisposedWithWriters()
         {
-            Assert.Throws<InvalidOperationException>(() => {
+            Assert.Throws<AggregateException>(() => {
                 ILockStrategy l = LockFactory.Create();
                 ThreadedWriter thread = new ThreadedWriter(l);
                 try {

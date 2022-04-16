@@ -22,6 +22,7 @@ namespace CSharpTest.Net.Library.Test
     public class TestWeakReferenceT
     {
         static bool _destroyed;
+
         class MyObject
         {
             ~MyObject()
@@ -31,26 +32,11 @@ namespace CSharpTest.Net.Library.Test
         }
 
         [Test]
-        [Ignore(".NET 6.0 don't call destructors")]
-        public void TestDestoryed()
+        public void TestDestroyed()
         {
             Utils.WeakReference<MyObject> r;
-            if (true)
-            {
-                MyObject obj = new MyObject();
 
-                r = new Utils.WeakReference<MyObject>(obj);
-                Assert.IsTrue(r.IsAlive);
-                Assert.IsNotNull(r.Target);
-                MyObject test;
-                Assert.IsTrue(r.TryGetTarget(out test));
-                Assert.IsTrue(ReferenceEquals(obj, test));
-                test = null;
-                _destroyed = false;
-
-                GC.KeepAlive(obj);
-                obj = null;
-            }
+            CreateObject(out r);
 
             GC.GetTotalMemory(true);
             GC.WaitForPendingFinalizers();
@@ -60,6 +46,21 @@ namespace CSharpTest.Net.Library.Test
             Assert.IsFalse(r.IsAlive);
             Assert.IsNull(r.Target);
             Assert.IsFalse(r.TryGetTarget(out tmp));
+        }
+
+        private static void CreateObject(out Utils.WeakReference<MyObject> r)
+        {
+            var obj = new MyObject();
+            r = new Utils.WeakReference<MyObject>(obj);
+            Assert.IsTrue(r.IsAlive);
+            Assert.IsNotNull(r.Target);
+            MyObject test;
+            Assert.IsTrue(r.TryGetTarget(out test));
+            Assert.IsTrue(ReferenceEquals(obj, test));
+            test = null;
+            _destroyed = false;
+
+            GC.KeepAlive(obj);
         }
 
         [Test]

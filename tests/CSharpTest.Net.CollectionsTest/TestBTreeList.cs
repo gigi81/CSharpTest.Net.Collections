@@ -18,11 +18,12 @@ using NUnit.Framework;
 using System.Diagnostics;
 using CSharpTest.Net.Collections;
 using CSharpTest.Net.Interfaces;
+using CSharpTest.Net.BPlusTree.Test;
 
 namespace CSharpTest.Net.Library.Test
 {
     [TestFixture]
-    public class TestBTreeList : CSharpTest.Net.BPlusTree.Test.TestCollection<BTreeList<int>, TestBTreeList.BTreeFactory, int>
+    public class TestBTreeList : TestCollection<BTreeList<int>, TestBTreeList.BTreeFactory, int>
     {
         protected static IComparer<int> Comparer { get { return Comparer<int>.Default; } }
 

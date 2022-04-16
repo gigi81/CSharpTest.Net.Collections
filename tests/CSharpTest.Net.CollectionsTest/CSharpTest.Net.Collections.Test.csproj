@@ -1,34 +1,18 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
-    <OutputType>Library</OutputType>
     <RootNamespace>CSharpTest.Net.Library.Test</RootNamespace>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <IsPackable>false</IsPackable>
     <IsTestable>true</IsTestable>
   </PropertyGroup>
+	
   <ItemGroup>
     <ProjectReference Include="..\..\src\CSharpTest.Net.Collections\CSharpTest.Net.Collections.csproj" />
+    <ProjectReference Include="..\CSharpTest.Net.BPlusTreeTest\CSharpTest.Net.BPlusTree.Test.csproj" />
   </ItemGroup>
+	
   <ItemGroup>
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.11.0" />
-    <PackageReference Include="NUnit" Version="3.13.2" />
-    <PackageReference Include="NUnit3TestAdapter" Version="4.0.0" />
     <PackageReference Include="System.Configuration.ConfigurationManager" Version="5.0.0" />
-    <PackageReference Include="Microsoft.DotNet.UpgradeAssistant.Extensions.Default.Analyzers" Version="0.3.246501">
-      <PrivateAssets>all</PrivateAssets>
-    </PackageReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="..\CSharpTest.Net.BPlusTreeTest\TestCollection.cs">
-      <Link>TestCollection.cs</Link>
-    </Compile>
-    <Compile Include="..\CSharpTest.Net.BPlusTreeTest\TestDictionary.cs">
-      <Link>TestDictionary.cs</Link>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Remove="Bases\Disposable.cs" />
-    <Compile Remove="Bases\Equatable.cs" />
   </ItemGroup>
 </Project>

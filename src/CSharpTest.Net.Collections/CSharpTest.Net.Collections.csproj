@@ -2,21 +2,18 @@
   <PropertyGroup>
     <RootNamespace>CSharpTest.Net</RootNamespace>
     <TargetFramework>netstandard2.1</TargetFramework>
-    <AssemblyTitle>CSharpTest.Net.Collections.dll</AssemblyTitle>
     <Company>Roger Knapp</Company>
     <Product>http://CSharpTest.Net/Projects</Product>
     <Description>Fully managed B+ Tree implementation for local data storage.</Description>
     <Copyright>Copyright 2009 by Roger Knapp, Licensed under the Apache License, Version 2.0</Copyright>
     <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
-    <OutputPath>bin\</OutputPath>
-    <DocumentationFile>bin\$(AssemblyName).XML</DocumentationFile>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <ErrorReport>none</ErrorReport>
     <DebugType>pdbonly</DebugType>
     <DebugSymbols>True</DebugSymbols>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-	  <PackageId>CSharpTest.Net.Collections.netstandard21</PackageId>
-	  <PackageProjectUrl>https://github.com/josellm/CSharpTest.Net.Collections</PackageProjectUrl>
+	<PackageId>CSharpTest.Net.Collections.netstandard21</PackageId>
+	<PackageProjectUrl>https://github.com/josellm/CSharpTest.Net.Collections</PackageProjectUrl>
   </PropertyGroup>
   <ItemGroup>
     <Compile Update="Resources.Designer.cs">
