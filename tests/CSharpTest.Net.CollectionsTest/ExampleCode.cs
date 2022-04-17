@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Text;
 using System.Threading;
 using CSharpTest.Net.Collections;
 using CSharpTest.Net.Serialization;
@@ -36,7 +34,7 @@ namespace CSharpTest.Net.Library.Test
             {
                 while (!stop.WaitOne(10))
                 {
-                    while (queue.TryDequeue(out var kv))
+                    while (queue.TryDequeue(out var _))
                         continue;
                 }
             })
@@ -56,7 +54,7 @@ namespace CSharpTest.Net.Library.Test
             }
 
             //help empty the queue
-            while (queue.TryDequeue(out var tmp))
+            while (queue.TryDequeue(out var _))
                 continue;
 
             //shutdown
