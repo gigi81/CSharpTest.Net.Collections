@@ -22,45 +22,47 @@ namespace CSharpTest.Net.Library.Test
         {
             var counts = new Counts();
             //Queue where producer helps when queue is full
-            using (var queue = new LurchTable<string, int>(LurchTableOrder.Insertion, 10))
+            var queue = new LurchTable<string, int>(LurchTableOrder.Insertion, 10);
+            var stop = new ManualResetEvent(false);
+
+            queue.ItemRemoved += kv =>
             {
-                var stop = new ManualResetEvent(false);
-                queue.ItemRemoved += kv =>
-                    {
-                        Interlocked.Increment(ref counts.Dequeued);
-                        Console.WriteLine("[{0}] - {1}", Thread.CurrentThread.ManagedThreadId, kv.Key);
-                    };
-                //start some threads eating queue:
-                var thread = new Thread(() => 
+                Interlocked.Increment(ref counts.Dequeued);
+                Console.WriteLine("[{0}] - {1}", Thread.CurrentThread.ManagedThreadId, kv.Key);
+            };
+
+            //start some threads eating queue:
+            var thread = new Thread(() =>
+            {
+                while (!stop.WaitOne(10))
                 {
-                    while (!stop.WaitOne(0))
-                    {
-                        KeyValuePair<string, int> kv;
-                        while (queue.TryDequeue(out kv))
-                            continue;
-                    }
-                })
-                    { Name = "worker", IsBackground = true };
-                thread.Start();
+                    while (queue.TryDequeue(out var kv))
+                        continue;
+                }
+            })
+            { Name = "worker", IsBackground = true };
+            thread.Start();
 
-                var names = Directory.GetFiles(Path.GetTempPath(), "*", SearchOption.AllDirectories);
-                if (names.Length < 1) throw new Exception("Not enough trash in your temp dir.");
-                var loops = Math.Max(1, 100/names.Length);
-                for(int i=0; i < loops; i++)
-                    foreach (var name in names)
-                    {
-                        Interlocked.Increment(ref counts.Queued);
-                        queue[name] = i;
-                    }
-
-                //help empty the queue
-                KeyValuePair<string, int> tmp;
-                while (queue.TryDequeue(out tmp))
-                    continue;
-                //shutdown
-                stop.Set();
-                thread.Join();
+            var names = Directory.GetFiles(Path.GetTempPath(), "*", SearchOption.AllDirectories);
+            if (names.Length < 1) throw new Exception("Not enough trash in your temp dir.");
+            var loops = Math.Min(100, names.Length);
+            for(int i=0; i < loops; i++)
+            {
+                foreach (var name in names)
+                {
+                    Interlocked.Increment(ref counts.Queued);
+                    queue[name] = i;
+                }
             }
+
+            //help empty the queue
+            while (queue.TryDequeue(out var tmp))
+                continue;
+
+            //shutdown
+            stop.Set();
+            thread.Join();
+            queue.Dispose();
 
             Assert.AreEqual(counts.Queued, counts.Dequeued);
         }
