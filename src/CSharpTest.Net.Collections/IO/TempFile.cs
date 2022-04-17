@@ -16,15 +16,18 @@ using System;
 using System.IO;
 using System.Diagnostics;
 using System.Text;
+using System.Collections.Generic;
 
 namespace CSharpTest.Net.IO
 {
     /// <summary>
     /// Provides a class for managing a temporary file and making reasonable a attempt to remove it upon disposal.
     /// </summary>
-    [System.Diagnostics.DebuggerDisplay("{TempPath}")]
+    [DebuggerDisplay("{TempPath}")]
     public class TempFile : IDisposable
     {
+        private static readonly HashSet<char> InvalidPathChars = new HashSet<char>(Path.GetInvalidPathChars());
+
         private string _filename;
 
         /// <summary>
@@ -142,8 +145,18 @@ namespace CSharpTest.Net.IO
                 if (Exists)
                     TempFile.Delete(_filename);
 
-                if (!String.IsNullOrEmpty(_filename = value))
-                    _filename = Path.GetFullPath(_filename);
+                if (!String.IsNullOrEmpty(value))
+                {
+                    foreach (var c in value)
+                        if (InvalidPathChars.Contains(c))
+                            throw new ArgumentException("Illegal characters in path");
+
+                    _filename = Path.GetFullPath(value);
+                }
+                else
+                {
+                    _filename = null;
+                }
             }
         }
 
@@ -153,7 +166,6 @@ namespace CSharpTest.Net.IO
         /// <summary>
         /// Disposes of the temporary file
         /// </summary>
-       [DebuggerNonUserCode]
         protected virtual void Dispose(bool disposing)
         {
             try

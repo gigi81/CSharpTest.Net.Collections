@@ -287,10 +287,11 @@ namespace CSharpTest.Net.Library.Test
 		[Test]
 		public void TestBadPathOnAttach()
 		{
-
-			TempFile f = TempFile.Attach("@~+_(%!&($_~!(&*+%_~&^%^|||&&&\\\\ THIS IS AN INVALID FILE NAME.*");
-			f.Dispose();
-			Assert.IsFalse(f.Exists);
+			Assert.Throws<ArgumentException>(() =>
+			{
+				var f = TempFile.Attach("@~+_(%!&($_~!(&*+%_~&^%^|||&&&\\\\ THIS IS AN INVALID FILE NAME.*");
+				f.Dispose();
+			});
 		}
 
 		[Test]
