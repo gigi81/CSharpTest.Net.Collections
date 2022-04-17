@@ -97,6 +97,70 @@ namespace CSharpTest.Net.Library.Test
             }
         }
 
+        [Test]
+        public void UserPost_IComparable()
+        {
+            var now = DateTime.UtcNow;
+
+            var user1 = new UserPost
+            {
+                UserId = Guid.NewGuid(),
+                PostTime = now
+            };
+
+            var user2 = new UserPost
+            {
+                UserId = user1.UserId,
+                PostTime = now
+            };
+
+            Assert.AreEqual(0, user1.CompareTo(user2));
+        }
+
+        [Test]
+        public void BplusTreeDemo_WithMultifieldKey()
+        {
+            var now = DateTime.UtcNow;
+
+            var options = new BPlusTree<UserPost, Guid>.OptionsV2(new UserPostKeySerializer(), PrimitiveSerializer.Guid);
+            options.CalcBTreeOrder(16, 24);
+            options.CreateFile = CreatePolicy.Always;
+            options.FileName = Path.GetTempFileName();
+
+            var users = Enumerable.Range(0, 10000 / 10).Select(i => Guid.NewGuid()).ToArray();
+            var data = Enumerable.Range(0, 10000).Select(i => CreateData(i, users, now)).ToArray();
+
+            using (var tree = new BPlusTree<UserPost, Guid>(options))
+            {
+                foreach (var d in data)
+                    tree.Add(d, Guid.NewGuid());
+            }
+
+            options.CreateFile = CreatePolicy.Never;
+
+            using (var tree = new BPlusTree<UserPost, Guid>(options))
+            {
+                tree.EnableCount();
+
+                foreach (var user in users)
+                {
+                    //get last 5 minutes of data
+                    var range = tree.EnumerateRange(new UserPost { UserId = user, PostTime = now.AddMinutes(-5) }, new UserPost { UserId = user, PostTime = now });
+
+                    Assert.AreEqual(6, range.Count());
+                }
+            }
+        }
+
+        private UserPost CreateData(int i, Guid[] users, DateTime now)
+        {
+            return new UserPost
+            {
+                UserId = users[i / 10],
+                PostTime = now.AddMinutes(-(i % 10))
+            };
+        }
+
         private static Random random = new Random();
 
         public static string GetRandomString(int length)
@@ -104,6 +168,42 @@ namespace CSharpTest.Net.Library.Test
             const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
             return new string(Enumerable.Repeat(chars, length)
                 .Select(s => s[random.Next(s.Length)]).ToArray());
+        }
+
+        public class UserPost : IComparable<UserPost>
+        {
+            public Guid UserId { get; set; }
+
+            public DateTime PostTime { get; set; }
+
+            public int CompareTo(UserPost other)
+            {
+                var user = this.UserId.CompareTo(other.UserId);
+                if(user != 0)
+                    return user;
+
+                return this.PostTime.CompareTo(other.PostTime);
+            }
+        }
+
+        public class UserPostKeySerializer : ISerializer<UserPost>
+        {
+            public UserPost ReadFrom(Stream stream)
+            {
+                var ret = new UserPost
+                {
+                    UserId = PrimitiveSerializer.Guid.ReadFrom(stream),
+                    PostTime = PrimitiveSerializer.DateTime.ReadFrom(stream)
+                };
+
+                return ret;
+            }
+
+            public void WriteTo(UserPost value, Stream stream)
+            {
+                PrimitiveSerializer.Guid.WriteTo(value.UserId, stream);
+                PrimitiveSerializer.DateTime.WriteTo(value.PostTime, stream);
+            }
         }
     }
 }

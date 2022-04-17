@@ -409,8 +409,7 @@ namespace CSharpTest.Net.Collections
         /// </summary>
         public bool ContainsKey(TKey key)
         { 
-            TValue value; 
-            return TryGetValue(key, out value); 
+            return TryGetValue(key, out _); 
         }
 
         /// <summary>
@@ -420,7 +419,7 @@ namespace CSharpTest.Net.Collections
         {
             bool result;
             value = default(TValue);
-            using (RootLock root = LockRoot(LockType.Read, "TryGetValue"))
+            using (var root = LockRoot(LockType.Read, "TryGetValue"))
                 result = Search(root.Pin, key, ref value);
             DebugComplete("Found({0}) = {1}", key, result);
             return result;

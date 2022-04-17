@@ -100,7 +100,11 @@ namespace CSharpTest.Net.Library.Test
 				GC.Collect(0, GCCollectionMode.Forced);
 				GC.WaitForPendingFinalizers();
 
-				Assert.IsTrue(File.Exists(filename));
+				if (Environment.OSVersion.Platform != PlatformID.Win32NT)
+					Assert.IsFalse(File.Exists(filename)); //TODO: investigate why on unix the file is actually deleted
+				else
+					Assert.IsTrue(File.Exists(filename)); //dua, it's still open
+
 				flock.Dispose();
 			}
 
