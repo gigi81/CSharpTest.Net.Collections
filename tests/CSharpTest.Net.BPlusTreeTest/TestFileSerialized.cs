@@ -27,15 +27,19 @@ namespace CSharpTest.Net.BPlusTree.Test
     [TestFixture]
     public class BasicFileTests : BasicTests
     {
-        TempFile TempFile;
+        TempFile _tempFile;
 
         [SetUp]
         public void Setup()
-        { TempFile = new TempFile(); }
+        {
+            _tempFile = new TempFile();
+        }
 
         [TearDown]
         public void TearDown()
-        { TempFile.Dispose(); }
+        {
+            _tempFile.Dispose();
+        }
 
         protected override BPlusTreeOptions<int, string> Options
         {
@@ -47,7 +51,7 @@ namespace CSharpTest.Net.BPlusTree.Test
                     LockingFactory = new IgnoreLockFactory(),
                     CachePolicy = CachePolicy.All,
                     CreateFile = CreatePolicy.Always,
-                    FileName = TempFile.TempPath,
+                    FileName = _tempFile.TempPath,
                 };
             }
         }
@@ -68,7 +72,7 @@ namespace CSharpTest.Net.BPlusTree.Test
                     Assert.IsTrue(tree.TryAdd(i, i.ToString()));
             }
 
-            using (Stream io = TempFile.Open())
+            using (Stream io = _tempFile.Open())
             {
                 //first we can corrupt the root node, which is always at an offset of BlockSize
                 io.Seek(512, SeekOrigin.Begin);
@@ -120,7 +124,7 @@ namespace CSharpTest.Net.BPlusTree.Test
                 using (var tree = new BPlusTree<int, string>(Options))
                 {
                     Assert.IsTrue(tree.TryAdd(1, "hi"));
-                    TempFile.Delete();
+                    _tempFile.Delete();
                 }
             });
         }
@@ -143,7 +147,7 @@ namespace CSharpTest.Net.BPlusTree.Test
             GC.WaitForPendingFinalizers();
 
             //Make sure the file has been released
-            TempFile.Delete();
+            _tempFile.Delete();
         }
     }
 
