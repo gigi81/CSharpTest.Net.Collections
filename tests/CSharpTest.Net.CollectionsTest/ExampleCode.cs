@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Threading;
 using CSharpTest.Net.Collections;
 using CSharpTest.Net.Serialization;
@@ -41,10 +42,8 @@ namespace CSharpTest.Net.Library.Test
             { Name = "worker", IsBackground = true };
             thread.Start();
 
-            var names = Directory.GetFiles(Path.GetTempPath(), "*", SearchOption.AllDirectories);
-            if (names.Length < 1) throw new Exception("Not enough trash in your temp dir.");
-            var loops = Math.Min(100, names.Length);
-            for(int i=0; i < loops; i++)
+            var names = Enumerable.Range(1, 100).Select(i => GetRandomString(100)).ToArray();
+            for(var i=0; i < 100; i++)
             {
                 foreach (var name in names)
                 {
@@ -72,32 +71,39 @@ namespace CSharpTest.Net.Library.Test
             options.CalcBTreeOrder(16, 24);
             options.CreateFile = CreatePolicy.Always;
             options.FileName = Path.GetTempFileName();
+
+            var files = Enumerable.Range(1, 100).Select(i => new { FullName = GetRandomString(100), LastWriteTimeUtc = DateTime.UtcNow.AddMinutes(random.Next(1000)) }).ToArray();
+
             using (var tree = new BPlusTree<string, DateTime>(options))
             {
-                var tempDir = new DirectoryInfo(Path.GetTempPath());
-                foreach (var file in tempDir.GetFiles("*", SearchOption.AllDirectories))
-                {
+                foreach (var file in files)
                     tree.Add(file.FullName, file.LastWriteTimeUtc);
-                }
             }
+
             options.CreateFile = CreatePolicy.Never;
+
             using (var tree = new BPlusTree<string, DateTime>(options))
             {
-                var tempDir = new DirectoryInfo(Path.GetTempPath());
-                foreach (var file in tempDir.GetFiles("*", SearchOption.AllDirectories))
+                tree.EnableCount();
+
+                foreach (var file in files)
                 {
-                    DateTime cmpDate;
-                    if (!tree.TryGetValue(file.FullName, out cmpDate))
-                        Console.WriteLine("New file: {0}", file.FullName);
-                    else if (cmpDate != file.LastWriteTimeUtc)
-                        Console.WriteLine("Modified: {0}", file.FullName);
+                    Assert.IsTrue(tree.TryGetValue(file.FullName, out var cmpDate));
+                    Assert.AreEqual(file.LastWriteTimeUtc, cmpDate);
                     tree.Remove(file.FullName);
                 }
-                foreach (var item in tree)
-                {
-                    Console.WriteLine("Removed: {0}", item.Key);
-                }
+
+                Assert.AreEqual(0, tree.Count);
             }
+        }
+
+        private static Random random = new Random();
+
+        public static string GetRandomString(int length)
+        {
+            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+            return new string(Enumerable.Repeat(chars, length)
+                .Select(s => s[random.Next(s.Length)]).ToArray());
         }
     }
 }

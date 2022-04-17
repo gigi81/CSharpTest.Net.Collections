@@ -62,8 +62,8 @@ namespace CSharpTest.Net.Library.Test
 				IDisposable flock = file.Open();
 				file.Dispose();
 
-				if (Environment.OSVersion.Platform == PlatformID.MacOSX)
-					Assert.IsFalse(File.Exists(filename)); //TODO: investigate why on mac the file is actually deleted
+				if (Environment.OSVersion.Platform != PlatformID.Win32NT)
+					Assert.IsFalse(File.Exists(filename)); //TODO: investigate why on unix the file is actually deleted
 				else
 					Assert.IsTrue(File.Exists(filename)); //dua, it's still open
 
@@ -91,8 +91,8 @@ namespace CSharpTest.Net.Library.Test
 				var flock = file.Open();
 				file.Dispose();
 
-				if (Environment.OSVersion.Platform == PlatformID.MacOSX)
-					Assert.IsFalse(File.Exists(filename)); //TODO: investigate why on mac the file is actually deleted
+				if (Environment.OSVersion.Platform != PlatformID.Win32NT)
+					Assert.IsFalse(File.Exists(filename)); //TODO: investigate why on unix the file is actually deleted
 				else
 					Assert.IsTrue(File.Exists(filename)); //dua, it's still open
 
