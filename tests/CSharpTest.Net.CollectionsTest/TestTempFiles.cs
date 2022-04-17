@@ -51,23 +51,21 @@ namespace CSharpTest.Net.Library.Test
 		[Test]
 		public void TestFinalizer()
 		{
-			string filename;
-			try
+			string filename = null;
+
+			using (TempFile file = new TempFile())
 			{
-				using (TempFile file = new TempFile()) {
-					filename = file.TempPath;
-					Assert.IsTrue(File.Exists(file.TempPath));
+				filename = file.TempPath;
+				Assert.IsFalse(String.IsNullOrEmpty(filename));
+				Assert.IsTrue(File.Exists(file.TempPath));
 
-					IDisposable flock = file.Open();
-					file.Dispose();
+				IDisposable flock = file.Open();
+				file.Dispose();
 
-					Assert.IsTrue(File.Exists(file.TempPath));//dua, it's still open
+				Assert.IsTrue(File.Exists(filename));//dua, it's still open
 
-					flock.Dispose();
-				};
-				
-			}
-			finally { }
+				flock.Dispose();
+			};
 
 			//wait for GC to collect tempfile
 			GC.Collect(0, GCCollectionMode.Forced);
@@ -85,12 +83,13 @@ namespace CSharpTest.Net.Library.Test
 			{
 				using (var file = new TempFile()) {
 					filename = file.TempPath;
+					Assert.IsFalse(String.IsNullOrEmpty(filename));
 					Assert.IsTrue(File.Exists(file.TempPath));
 
 					flock = file.Open();
 					file.Dispose();
 
-					Assert.IsTrue(File.Exists(file.TempPath));//dua, it's still open
+					Assert.IsTrue(File.Exists(filename));//dua, it's still open
 
 					//wait for GC to collect tempfile
 					GC.Collect(0, GCCollectionMode.Forced);
@@ -283,13 +282,14 @@ namespace CSharpTest.Net.Library.Test
 			});
 		}
 
-
 		[Test]
 		public void TestBadPathOnAttach()
 		{
+			var invalid = Path.GetInvalidPathChars();
+
 			Assert.Throws<ArgumentException>(() =>
 			{
-				var f = TempFile.Attach("@~+_(%!&($_~!(&*+%_~&^%^|||&&&\\\\ THIS IS AN INVALID FILE NAME.*");
+				var f = TempFile.Attach("@~+_(%!&($_~!(&*+%_~&^%^|||&&&\\\\ THIS IS AN INVALID FILE NAME.*" + invalid[0]);
 				f.Dispose();
 			});
 		}

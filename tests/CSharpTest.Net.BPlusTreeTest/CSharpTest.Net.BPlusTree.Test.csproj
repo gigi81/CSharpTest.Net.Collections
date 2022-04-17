@@ -5,6 +5,7 @@
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <IsPackable>false</IsPackable>
     <IsTestable>true</IsTestable>
+	<LangVersion>10</LangVersion>
   </PropertyGroup>
 	
   <ItemGroup>

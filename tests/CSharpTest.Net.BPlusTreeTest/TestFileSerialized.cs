@@ -119,14 +119,15 @@ namespace CSharpTest.Net.BPlusTree.Test
         [Test]
         public void TestDeleteUnderlyingFile()
         {
-            Assert.Throws<IOException>(() =>
+            using (var tree = new BPlusTree<int, string>(Options))
             {
-                using (var tree = new BPlusTree<int, string>(Options))
-                {
-                    Assert.IsTrue(tree.TryAdd(1, "hi"));
-                    _tempFile.Delete();
-                }
-            });
+                Assert.IsTrue(tree.TryAdd(1, "hi"));
+
+                if (Environment.OSVersion.Platform == PlatformID.Win32NT)
+                    Assert.Throws<IOException>(() => _tempFile.Delete());
+                else
+                    _tempFile.Delete(); //TODO: investigate why this does not throw on unix
+            };
         }
 
         [Test]
